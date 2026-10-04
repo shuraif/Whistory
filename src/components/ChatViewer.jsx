@@ -2,7 +2,7 @@ import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { MessageItem } from './MessageItem';
 import { MediaGallery } from './MediaGallery';
-import { Search, MoreVertical, Phone, Video, Sun, Moon, ChevronUp, ChevronDown, Download, Smile, Paperclip, Mic, ChevronLeft, ChevronRight, X, MessageCircle, Play, Pause } from 'lucide-react';
+import { Search, MoreVertical, Phone, Video, Sun, Moon, ChevronUp, ChevronDown, Download, Smile, Paperclip, Mic, ChevronLeft, ChevronRight, X, MessageCircle, Play, Pause, Github } from 'lucide-react';
 import { format, isToday, isYesterday } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -294,6 +294,10 @@ export const ChatViewer = ({ messages, participants, mediaMap, isZip, isDark, to
         </div>
         
         <div className="flex items-center gap-2 md:gap-4 text-[#54656f] dark:text-[#aebac1]">
+          {/* GitHub Link */}
+          <a href="https://github.com/shuraif/Whistory" target="_blank" rel="noopener noreferrer" className="p-2 hover:bg-gray-200 dark:hover:bg-[#374045] rounded-full transition-colors" title="View Source on GitHub">
+            <Github size={20} />
+          </a>
           {/* Theme Toggle */}
           <button onClick={toggleTheme} className="p-2 hover:bg-gray-200 dark:hover:bg-[#374045] rounded-full transition-colors mr-1">
             {isDark ? <Sun size={20} /> : <Moon size={20} />}
