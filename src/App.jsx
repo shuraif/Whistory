@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { handleDirectoryUpload, handleZipUpload } from './utils/fileHandler';
 import { parseChatFile } from './utils/chatParser';
 import { ChatViewer } from './components/ChatViewer';
-import { FolderOpen, FileArchive, Sun, Moon } from 'lucide-react';
+import { FolderOpen, FileArchive, Sun, Moon, Github } from 'lucide-react';
 
 function App() {
   const [chatData, setChatData] = useState(null);
@@ -132,8 +132,12 @@ function App() {
           )}
         </div>
         
-        <div className="bg-gray-50 dark:bg-[#182229] p-4 text-center text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-[#313d45] transition-colors duration-200">
-          Your data never leaves your device. Everything is parsed and processed locally in your browser.
+        <div className="bg-gray-50 dark:bg-[#182229] p-4 flex flex-col items-center justify-center gap-2 text-center text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-[#313d45] transition-colors duration-200">
+          <span>Your data never leaves your device. Everything is parsed and processed locally in your browser.</span>
+          <a href="https://github.com/shuraif/Whistory" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[#00a884] hover:text-[#005c4b] dark:hover:text-[#00c29d] hover:underline font-medium transition-colors">
+            <Github size={14} />
+            Proudly Open Source on GitHub
+          </a>
         </div>
       </div>
     </div>
