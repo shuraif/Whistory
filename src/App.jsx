@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { handleDirectoryUpload, handleZipUpload } from './utils/fileHandler';
 import { parseChatFile } from './utils/chatParser';
 import { ChatViewer } from './components/ChatViewer';
-import { FolderOpen, FileArchive, Sun, Moon, Github } from 'lucide-react';
+import { FolderOpen, FileArchive, Sun, Moon, Github, Info } from 'lucide-react';
 
 function App() {
   const [chatData, setChatData] = useState(null);
@@ -20,6 +20,7 @@ function App() {
   }, [isDark]);
   
   const dirInputRef = useRef(null);
+  const zipInputRef = useRef(null);
 
   const processTextAndMedia = async (chatText, mediaMap, isZip) => {
     if (!chatText) {
@@ -59,6 +60,26 @@ function App() {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const onZipSelect = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.name.endsWith('.zip')) {
+      setError('Please select a valid .zip file.');
+      return;
+    }
+    try {
+      setLoading(true);
+      setError('');
+      const { chatText, mediaMap, isZip } = await handleZipUpload(file);
+      await processTextAndMedia(chatText, mediaMap, isZip);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+      e.target.value = null; // Reset so they can re-select the same file if needed
     }
   };
 
@@ -116,18 +137,35 @@ function App() {
                 />
               </button>
 
-              <div 
+              <button 
+                onClick={() => zipInputRef.current?.click()}
                 onDragOver={e => e.preventDefault()}
                 onDrop={onZipDrop}
-                className="flex flex-col items-center justify-center p-8 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-[#00a884] dark:hover:border-[#00a884] hover:bg-emerald-50 dark:hover:bg-[#182229] transition-all duration-200 group cursor-pointer"
+                className="flex flex-col items-center justify-center p-8 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-[#00a884] dark:hover:border-[#00a884] hover:bg-emerald-50 dark:hover:bg-[#182229] transition-all duration-200 group cursor-pointer w-full"
               >
                 <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700/50 rounded-full flex items-center justify-center group-hover:bg-emerald-100 dark:group-hover:bg-[#005c4b]/30 group-hover:text-[#00a884] dark:group-hover:text-[#00a884] transition-colors mb-4">
                   <FileArchive size={32} className="text-gray-500 dark:text-gray-400 group-hover:text-[#00a884] dark:group-hover:text-[#00a884]" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-1">Drop ZIP File</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 text-center">Drag and drop your exported .zip chat backup here.</p>
-              </div>
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-1">Select ZIP File</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 text-center">Click here or drag and drop your exported .zip backup.</p>
+                <input 
+                  type="file" 
+                  ref={zipInputRef} 
+                  accept=".zip"
+                  className="hidden" 
+                  onChange={onZipSelect}
+                />
+              </button>
               
+            </div>
+          )}
+
+          {!loading && !error && (
+            <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200 dark:border-blue-800/50 flex gap-3 text-sm">
+              <Info className="shrink-0 mt-0.5" size={18} />
+              <p>
+                <strong>Browser Warning:</strong> When selecting a folder, your browser may ask if you want to "upload" files to this site. This is a standard security prompt. Your files are only read locally in your computer's memory and are <strong>never uploaded to any server</strong>.
+              </p>
             </div>
           )}
         </div>
